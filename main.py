@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 ##Function to create first welcome page of TT.
 def index():
-    return "Welcome"
+    return "Tejas is the best"
 
 ##run the application on local deployment server.
 if __name__ == "__main__":
