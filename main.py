@@ -8,7 +8,7 @@ import re
 import string
 
 # NLP preprocessing libraries
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -68,7 +68,7 @@ get_tweets(Topic, count=100)
 #print(df.head(8))
 
 # Global Parameters
-stop_words = set(stopwords.words('english'))
+#stop_words = set(stopwords.words('english'))
 
 def remove_unwanted_cols(df, cols):
     for col in cols:
@@ -92,13 +92,13 @@ def preprocess_tweet_text(tweet):
     tweet = tweet.translate(str.maketrans('', '', string.punctuation))
     # Remove stopwords
     tweet_tokens = word_tokenize(tweet)
-    filtered_words = [w for w in tweet_tokens if not w in stop_words]
+    #filtered_words = [w for w in tweet_tokens if not w in stop_words]
     
     #ps = PorterStemmer()
     #stemmed_words = [ps.stem(w) for w in filtered_words]
     #lemmatizer = WordNetLemmatizer()
     #lemma_words = [lemmatizer.lemmatize(w, pos='a') for w in stemmed_words]
-    return " ".join(filtered_words)
+    return " ".join(tweet_tokens)
 
 def get_feature_vector(train_fit):
     vector = TfidfVectorizer(max_features=50)
