@@ -30,7 +30,7 @@ access_token_secret = config['twitter']['access_token_secret']
 auth = tweepy.OAuthHandler(api_key, api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-api = tweepy.API(auth)
+api = tweepy.API(auth, wait_on_rate_limit=True)
 
 public_tweets = api.home_timeline()
 
