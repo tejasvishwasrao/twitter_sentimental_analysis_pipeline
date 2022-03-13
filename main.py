@@ -9,7 +9,7 @@ import string
 
 # NLP preprocessing libraries
 #from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+#from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from flask import render_template, Flask
@@ -91,7 +91,8 @@ def preprocess_tweet_text(tweet):
     # Remove punctuations
     #tweet = tweet.translate(str.maketrans('', '', string.punctuation))
     # Remove stopwords
-    tweet_tokens = word_tokenize(tweet)
+    #tweet_tokens = word_tokenize(tweet)
+    tweet_tokens = re.findall("[\w']+", tweet)
     #filtered_words = [w for w in tweet_tokens if not w in stop_words]
     
     #ps = PorterStemmer()
