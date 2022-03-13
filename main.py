@@ -61,7 +61,7 @@ def get_tweets(topic, count):
 
 
 # Call the function to extract the data. pass the topic and filename you want the data to be stored in.
-Topic = ["Ukraine"]
+Topic = ["Messi"]
 
 get_tweets(Topic, count=10)
 
