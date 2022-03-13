@@ -1,5 +1,10 @@
 # Twitter_sentimental_analysis_pipeline -  Deployment with CICD Setup
 
+A Twitter Sentiment analysis Project which will scrap twitter for the topic selected by the user. • The extracted tweets will then be used to determine the Sentiments of those tweets. • The different Visualizations will help us get a feel of the overall mood of the people on Twitter regarding the topic selected. • The Extracted Tweets data is first cleaned , filtered , unwanted words are deleted and the Sentiment Analysis is done on the clean data using the TextBlob Library.
+
+Our Goal is to Create an API where the user will Enter a Topic, which we will search on Twitter and Extract tweets related to that Topic.
+We will then do sentiment Analysis on the extracted tweets and classify them into Positive, Negative, Neutral.
+
 Tools used here are Github , Jenkins , Ansible , Docker and Kubernetes. 
 
 The following diagram represent the flow of the setup:
@@ -106,7 +111,7 @@ Note: image: tejasvishwasrao/bigdataexam - here tejasvishwasrao refers to my per
 20. Scrolling down to "Build" select "Send files or execute commands over SSH" and under jenkins server run the following command:
 
 ```
-rsync -avh /var/lib/jenkins/workspace/trivagoproject/Trivago_devops_project/*  root@ANSIBLE_SERVER_PRIVATE_IP:/opt
+rsync -avh /var/lib/jenkins/workspace/bigdataexam*  root@ANSIBLE_SERVER_PRIVATE_IP:/opt
 ````
 
 21. Scroll down to "Add build step" select "Send files or execute commands over SSH" and under Ansible server run the following command:
@@ -131,10 +136,7 @@ ansible-playbook  /opt/ansible.yml
 24. Run the pipeline manually first. 
 Given below is the result after running pipeline manually.
 
-<img src="E:/GITHUB_Projects/big-data-programming-2-october-2020-group-5-1/capture.png" alt="Alt text" title="Result">
+![Capture](https://user-images.githubusercontent.com/69673830/158079520-ed778ea9-af4a-4c8e-9146-09b49c1ff075.PNG)
 
-![welcome 1](https://user-images.githubusercontent.com/69673830/135096421-79834193-53d2-4eeb-b807-f63722d90164.png)
-
-![taxis 1 with true](https://user-images.githubusercontent.com/69673830/135096494-1afe9d0f-0fa9-4f39-bf16-7a7984059949.png)
-
+![Capture3](https://user-images.githubusercontent.com/69673830/158079863-b44b98c1-cf68-439a-8589-cf7bd7dd426c.PNG)
 
