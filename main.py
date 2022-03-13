@@ -89,7 +89,7 @@ def preprocess_tweet_text(tweet):
     # Remove user @ references and '#' from tweet
     tweet = re.sub(r'\@\w+|\#','', tweet)
     # Remove punctuations
-    tweet = tweet.translate(str.maketrans('', '', string.punctuation))
+    #tweet = tweet.translate(str.maketrans('', '', string.punctuation))
     # Remove stopwords
     tweet_tokens = word_tokenize(tweet)
     #filtered_words = [w for w in tweet_tokens if not w in stop_words]
