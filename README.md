@@ -1,5 +1,4 @@
-# twitter_sentimental_analysis_pipeline
-# trivago_devops_case_study -  Deployment with CICD Setup
+# twitter_sentimental_analysis_pipeline -  Deployment with CICD Setup
 
 Tools used here are Github , Jenkins , Ansible , Docker and Kubernetes. 
 
