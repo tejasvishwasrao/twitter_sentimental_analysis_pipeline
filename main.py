@@ -1,4 +1,3 @@
-from fileinput import filename
 import pickle5 as pickle
 import numpy as np
 import tweepy
@@ -7,9 +6,7 @@ import pandas as pd
 import re
 import string
 
-# NLP preprocessing libraries
-#from nltk.corpus import stopwords
-#from nltk.tokenize import word_tokenize
+# sklearn TfidfVectorizer libraries
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from flask import render_template, Flask
@@ -18,57 +15,30 @@ from flask import render_template, Flask
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-
+# Global Parameters
 api_key = config['twitter']['api_key']
 api_key_secret = config['twitter']['api_key_secret']
 
 access_token = config['twitter']['access_token']
 access_token_secret = config['twitter']['access_token_secret']
 
-
-# authentication
-auth = tweepy.OAuthHandler(api_key, api_key_secret)
-auth.set_access_token(access_token, access_token_secret)
-
-api = tweepy.API(auth,retry_count=5,retry_delay=2)
-
-public_tweets = api.home_timeline()
-
-
+# creating a new dataframe
 df = pd.DataFrame(columns=["target","t_id", "created_at", "user", "text"])
-#print(df)
 
-
-def get_tweets(topic, count):
+# defining a function to retrieve new tweets from API call
+def get_tweets(api , topic, count):
     i = 0
-    for tweet in tweepy.Cursor(api.search_tweets, q=topic, count=10, lang="en").items():
-        #print(i, end='\r')
+    for tweet in tweepy.Cursor(api.search_tweets, q=topic, count=200, lang="en").items():
         df.loc[i, "t_id"] = tweet.id
         df.loc[i, "created_at"] = tweet.created_at
-        #df.loc[i, "query"] = tweet.query
         df.loc[i, "user"] = tweet.user.name
-        #df.loc[i, "IsVerified"] = tweet.user.verified
         df.loc[i, "text"] = tweet.text
-        #df.loc[i, "Likes"] = tweet.favorite_count
-        #df.loc[i, "RT"] = tweet.retweet_count
-        #df.loc[i, "User_location"] = tweet.user.location
-        df.to_csv('TweetDataset.csv')
+
         i = i + 1
         if i > count:
             break
         else:
             pass
-
-
-# Call the function to extract the data. pass the topic and filename you want the data to be stored in.
-Topic = ["Messi"]
-
-get_tweets(Topic, count=10)
-
-#print(df.head(8))
-
-# Global Parameters
-#stop_words = set(stopwords.words('english'))
 
 def remove_unwanted_cols(df, cols):
     for col in cols:
@@ -83,56 +53,26 @@ def remove_unwanted_cols(df, cols):
 # ([RT]) : Remove "RT" from the tweet
 
 def preprocess_tweet_text(tweet):
+    # Convert the text to lowercase
     tweet.lower()
+
     # Remove urls
     tweet = re.sub(r"http\S+|www\S+|https\S+", '', tweet, flags=re.MULTILINE)
+
     # Remove user @ references and '#' from tweet
     tweet = re.sub(r'\@\w+|\#','', tweet)
+
     # Remove punctuations
-    #tweet = tweet.translate(str.maketrans('', '', string.punctuation))
-    # Remove stopwords
-    #tweet_tokens = word_tokenize(tweet)
-    tweet_tokens = re.findall("[\w']+", tweet)
-    #filtered_words = [w for w in tweet_tokens if not w in stop_words]
+    tweet = re.sub('(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|([RT])', ' ', tweet)
     
-    #ps = PorterStemmer()
-    #stemmed_words = [ps.stem(w) for w in filtered_words]
-    #lemmatizer = WordNetLemmatizer()
-    #lemma_words = [lemmatizer.lemmatize(w, pos='a') for w in stemmed_words]
+    tweet_tokens = re.findall("[\w']+", tweet)
+    
     return " ".join(tweet_tokens)
 
 def get_feature_vector(train_fit):
-    vector = TfidfVectorizer(max_features=50)
+    vector = TfidfVectorizer(max_features=500)
     vector.fit(train_fit)
     return vector
-
-# Remove unwanted columns from dataset
-df = remove_unwanted_cols(df, ['t_id', 'created_at', 'user'])
-
-#df["target"] = np.nan
-
-#df = df[['target', 'text']]
-
-#Preprocess data
-df.text = df['text'].apply(preprocess_tweet_text)
-
-print(df) 
-
-print(df.columns)
-
-tf_vector = get_feature_vector(np.array(df.iloc[:, 1]).ravel())
-X = tf_vector.transform(np.array(df.iloc[:, 1]).ravel())
-
-# load the model from disk
-with open('model.pkl' , 'rb') as f:   
-    lr = pickle.load(f)
-df['target'] = lr.predict(X)
-
-print(df.head(5))
-
-#print(df.head(5))
-print('length of data is', len(df))
-
 
 ##create an instance of flask class for our app.
 app = Flask(__name__)
@@ -146,4 +86,35 @@ def table():
 
 ##run the application on local deployment server.
 if __name__ == "__main__":
+
+    # authentication
+    auth = tweepy.OAuthHandler(api_key, api_key_secret)
+    auth.set_access_token(access_token, access_token_secret)
+
+    api = tweepy.API(auth)
+    public_tweets = api.home_timeline()
+
+    # Call the function to extract the data. pass the topic and filename you want the data to be stored in.
+    Topic = ["Ukraine"]
+    get_tweets(api, Topic, count=100)
+
+    # Remove unwanted columns from dataset
+    df = remove_unwanted_cols(df, ['t_id', 'created_at', 'user'])
+
+    #Preprocess data
+    df.text = df['text'].apply(preprocess_tweet_text)
+
+    # Vectorize the input text data
+    tf_vector = get_feature_vector(np.array(df.iloc[:, 1]).ravel())
+
+    # Create input variable to pass to the model
+    X = tf_vector.transform(np.array(df.iloc[:, 1]).ravel())
+
+    # load the model from disk
+    with open('model.pkl' , 'rb') as f:   
+        lr = pickle.load(f)
+    df['target'] = lr.predict(X)
+
+    print(df.head(50))
+
     app.run(host='0.0.0.0')
