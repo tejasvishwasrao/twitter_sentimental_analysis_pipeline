@@ -1,4 +1,3 @@
-
 #from lib2to3.pgen2.pgen import DFAState
 from fileinput import filename
 import pickle
@@ -126,9 +125,9 @@ df = remove_unwanted_cols(df, ['t_id', 'created_at', 'user'])
 #Preprocess data
 df.text = df['text'].apply(preprocess_tweet_text)
 
-#print(df) 
+print(df) 
 
-#print(df.columns)
+print(df.columns)
 
 tf_vector = get_feature_vector(np.array(df.iloc[:, 1]).ravel())
 X = tf_vector.transform(np.array(df.iloc[:, 1]).ravel())
@@ -138,41 +137,26 @@ with open('model.pkl' , 'rb') as f:
     lr = pickle.load(f)
 df['target'] = lr.predict(X)
 
-#print(df.head(5))
+print(df.head(5))
  
 #df["Sentiment"] = df["Tweet"].apply(lambda x: analyze_sentiment(x))
 
 #print(df.head(5))
-#print('length of data is', len(df))
+print('length of data is', len(df))
 
 
 ##import packages
 from flask import render_template, Flask
-from flask_caching import Cache
-
 
 ##create an instance of flask class for our app.
 app = Flask(__name__)
-cache = Cache()
 
 #creates url
 @app.route('/')
 
 ##Function to create first welcome page of TT.
-def index():
-    return "Twitter Sentiment Analysis"
-
-##caching of the app.
-app.config['CACHE_TYPE'] = 'simple'
-cache.init_app(app)
-
-##creates url under /taxis
-@app.route('/', methods=("POST", "GET"))
-
 def table():
-
-    return render_template('simple.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
-
+    return df.to_html()
 
 ##run the application on local deployment server.
 if __name__ == "__main__":
