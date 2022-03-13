@@ -1,4 +1,4 @@
-# twitter_sentimental_analysis_pipeline -  Deployment with CICD Setup
+# Twitter_sentimental_analysis_pipeline -  Deployment with CICD Setup
 
 Tools used here are Github , Jenkins , Ansible , Docker and Kubernetes. 
 
@@ -89,7 +89,7 @@ spec:
         ports:
         - containerPort: 5000
 ``` 
-Note: image: tejasvishwasrao/trivagoproject - here tejasvishwasrao refers to my personal dockerHub id and trivagoproject would be the image name.
+Note: image: tejasvishwasrao/bigdataexam - here tejasvishwasrao refers to my personal dockerHub id and trivagoproject would be the image name.
 
 14. SSH into Ansible server and add controller machines privateIp to the hosts folder, which can be found under the path /etc/ansible/hosts. 
 15. SSH into jenkins server and install Git. 
@@ -120,7 +120,6 @@ docker image push tejasvishwasrao/$JOB_NAME:v1.$BUILD_ID
 docker image push tejasvishwasrao/$JOB_NAME:latest
 docker image rmi $JOB_NAME:v1.$BUILD_ID tejasvishwasrao/$JOB_NAME:v1.$BUILD_ID tejasvishwasrao/$JOB_NAME:latest
 ```
-Note: tejasvishwasrao here is personal DockerHub ID.
 
 22. Scroll down to "add post build action" and select "Send build artifacts over SSH" 
 
@@ -130,20 +129,12 @@ ansible-playbook  /opt/ansible.yml
 
 23. Login into AWS and add rule to the Security group of the nodes by allowing the port 31200 since it is used in our service.
 24. Run the pipeline manually first. 
-Given below is the first result after running pipeline manually.
+Given below is the result after running pipeline manually.
+
+<img src="E:/GITHUB_Projects/big-data-programming-2-october-2020-group-5-1/capture.png" alt="Alt text" title="Result">
 
 ![welcome 1](https://user-images.githubusercontent.com/69673830/135096421-79834193-53d2-4eeb-b807-f63722d90164.png)
 
 ![taxis 1 with true](https://user-images.githubusercontent.com/69673830/135096494-1afe9d0f-0fa9-4f39-bf16-7a7984059949.png)
 
-
-25. Result 2 
-Automatic triggering of pipeline since changes were made in app file to change the welcome page and also to /taxis  which now shows which taxis are not available
-
-![Welcome 2](https://user-images.githubusercontent.com/69673830/135097338-e7e54aaa-cbd4-4bcb-82f1-865d728a1ff2.png)
-
-![taxis 2 with false](https://user-images.githubusercontent.com/69673830/135097414-9dbfe973-ccd7-4420-8c84-2f1693bf4254.png)
-
-# END
-# THANK YOU
 
