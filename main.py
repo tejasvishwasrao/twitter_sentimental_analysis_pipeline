@@ -1,4 +1,3 @@
-#from lib2to3.pgen2.pgen import DFAState
 from fileinput import filename
 import pickle
 import numpy as np
@@ -7,12 +6,13 @@ import configparser
 import pandas as pd
 import re
 import string
-from textblob import TextBlob 
 
 # NLP preprocessing libraries
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
+
+from flask import render_template, Flask
 
 # read configs
 config = configparser.ConfigParser()
@@ -105,16 +105,6 @@ def get_feature_vector(train_fit):
     vector.fit(train_fit)
     return vector
 
-# Analyze the tweets
-def analyze_sentiment(tweet):
-    analysis = TextBlob(tweet)
-    if analysis.sentiment.polarity > 0:
-        return 'Positive'
-    elif analysis.sentiment.polarity == 0:
-        return 'Neutral'
-    else:
-        return 'Negative'
-
 # Remove unwanted columns from dataset
 df = remove_unwanted_cols(df, ['t_id', 'created_at', 'user'])
 
@@ -138,15 +128,10 @@ with open('model.pkl' , 'rb') as f:
 df['target'] = lr.predict(X)
 
 print(df.head(5))
- 
-#df["Sentiment"] = df["Tweet"].apply(lambda x: analyze_sentiment(x))
 
 #print(df.head(5))
 print('length of data is', len(df))
 
-
-##import packages
-from flask import render_template, Flask
 
 ##create an instance of flask class for our app.
 app = Flask(__name__)
