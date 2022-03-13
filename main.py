@@ -1,5 +1,5 @@
 from fileinput import filename
-import pickle
+import pickle5 as pickle
 import numpy as np
 import tweepy
 import configparser
