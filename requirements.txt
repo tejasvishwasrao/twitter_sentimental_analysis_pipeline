@@ -4,3 +4,4 @@ mlflow==1.24.0
 Flask==2.0.1
 Flask_caching
 sklearn
+nltk==3.7
