@@ -2,5 +2,4 @@ tweepy==4.6.0
 Flask==2.0.1
 Flask_caching
 sklearn
-nltk==3.7
 pandas
