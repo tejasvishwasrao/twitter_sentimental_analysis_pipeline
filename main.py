@@ -41,7 +41,7 @@ df = pd.DataFrame(columns=["target","t_id", "created_at", "user", "text"])
 
 def get_tweets(topic, count):
     i = 0
-    for tweet in tweepy.Cursor(api.search_tweets, q=topic, count=100, lang="en").items():
+    for tweet in tweepy.Cursor(api.search_tweets, q=topic, count=10, lang="en").items():
         #print(i, end='\r')
         df.loc[i, "t_id"] = tweet.id
         df.loc[i, "created_at"] = tweet.created_at
